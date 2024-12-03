@@ -1,39 +1,46 @@
 safeReports = 0
 
-
-# Requirements for Safe report:
-# ALL INCREASING or DECREASING (no up and down)
-# Adjacent differ by at least 1, 3 at most.
-
-## FIX to ONLY MARK SAFE ONCE PER LINE (report) not for every pair.
-
-# read from file to get input data.
-with  open("inputDay2.txt", "r") as f:
+# Read from file to get input data
+with open("inputDay2.txt", "r") as f:
     lines = f.read().splitlines()
 
-#convert the line into a list of ints
+
+# Function to check if a report is safe with one potential issue
+def is_safe_with_dampener(numbers):
+    increasing = decreasing = True
+    dampener_used = False
+
+    for i in range(len(numbers) - 1):
+        diff = numbers[i + 1] - numbers[i]
+
+        if abs(diff) < 1 or abs(diff) > 3:
+            if not dampener_used:
+                dampener_used = True
+            else:
+                return False
+
+        if diff > 0:
+            decreasing = False
+        elif diff < 0:
+            increasing = False
+
+        if increasing and decreasing:
+            if not dampener_used:
+                dampener_used = True
+            else:
+                return False
+
+    return increasing or decreasing
+
+
+# Convert the line into a list of ints and check for safety
 for line in lines:
     numbers = list(map(int, line.split()))
-    safe = True
-    increasing = False
-    decreasing = False
-
-    for x, y in zip(numbers, numbers[1:]):
-
-        diff = abs(y - x)
-        if diff < 1 or diff > 3 or diff == 0:
-            safe = False
-        if y > x:
-            increasing = True
-        elif y < x:
-            decreasing = True
-        # exit early due to being unsafe if mixed
-        if increasing and decreasing:
-            safe = False
-        else:
-            print("unsafe")
-    # If the sequence was safe and meets all criteria, increment safeReports
-    if safe:
+    print(f"Checking report: {numbers}")  # Debug statement
+    if is_safe_with_dampener(numbers):
+        print("Safe with or without dampener")  # Debug statement
         safeReports += 1
+    else:
+        print("Unsafe")  # Debug statement
 
-print (safeReports)
+print(f"Total safe reports: {safeReports}")

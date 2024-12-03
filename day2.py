@@ -4,7 +4,6 @@ safeReports = 0
 with open("inputDay2.txt", "r") as f:
     lines = f.read().splitlines()
 
-
 # Function to check if a report is safe with one potential issue
 def is_safe_with_dampener(numbers):
     increasing = decreasing = True
